@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="128x128" href="https://simonsportsbetting.com/ssb-favicon-v3-128.png">
 <link rel="apple-touch-icon" sizes="180x180" href="https://simonsportsbetting.com/ssb-touch-v3-180.png">
 <link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://simonsportsbetting.com/ssb-touch-v3-180.png">
-<link rel="manifest" href="/manifest.json?v=2">
+<link rel="manifest" href="/manifest.json?v=3">
 <meta name="theme-color" content="#d7dde6">
 <meta name="apple-mobile-web-app-title" content="Parlay Tracker">
 <meta property="og:type" content="website">
@@ -26,23 +26,50 @@
 <div class="boot">Loading Parlay Tracker…</div>
 <script>
 (async()=>{
-  const sourcePage="https://simonsportsbetting.com/?mirror="+Date.now();
-  const silverHead="<link rel=\"icon\" href=\"https://simonsportsbetting.com/favicon.ico\" sizes=\"any\"><link rel=\"shortcut icon\" href=\"https://simonsportsbetting.com/favicon.ico\"><link rel=\"icon\" type=\"image/png\" sizes=\"64x64\" href=\"https://simonsportsbetting.com/ssb-favicon-v3-64.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"128x128\" href=\"https://simonsportsbetting.com/ssb-favicon-v3-128.png\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://simonsportsbetting.com/ssb-touch-v3-180.png\"><link rel=\"apple-touch-icon-precomposed\" sizes=\"180x180\" href=\"https://simonsportsbetting.com/ssb-touch-v3-180.png\"><link rel=\"manifest\" href=\"/manifest.json?v=2\"><meta name=\"theme-color\" content=\"#d7dde6\"><meta name=\"apple-mobile-web-app-title\" content=\"Parlay Tracker\"><meta property=\"og:url\" content=\"https://simonsports.bet/\">";
-  const silverStyle="<style id=\"silverRootHost\">.top{border-color:rgba(255,255,255,.88)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(44,52,63,.22),0 7px 16px rgba(0,0,0,.13)!important}</style>";
-  const cleanOuterHead=markup=>markup.replace(/<head\b([^>]*)>([\s\S]*?)<\/head>/i,(full,attrs,inner)=>{
-    inner=inner
-      .replace(/<link\b(?=[^>]*\brel=["'](?:icon|shortcut icon|apple-touch-icon(?:-precomposed)?|manifest)["'])[^>]*>\s*/gi,'')
-      .replace(/<meta\b(?=[^>]*(?:name=["'](?:theme-color|apple-mobile-web-app-title)["']|property=["']og:url["']))[^>]*>\s*/gi,'')
-      .replace(/<base\b[^>]*>\s*/gi,'');
-    return '<head'+attrs+'>'+silverHead+inner+silverStyle+'</head>';
-  });
+  const sourcePage='https://simonsportsbetting.com/?mirror='+Date.now();
+  const silverHead='<link rel="icon" href="https://simonsportsbetting.com/favicon.ico" sizes="any"><link rel="shortcut icon" href="https://simonsportsbetting.com/favicon.ico"><link rel="icon" type="image/png" sizes="64x64" href="https://simonsportsbetting.com/ssb-favicon-v3-64.png"><link rel="icon" type="image/png" sizes="128x128" href="https://simonsportsbetting.com/ssb-favicon-v3-128.png"><link rel="apple-touch-icon" sizes="180x180" href="https://simonsportsbetting.com/ssb-touch-v3-180.png"><link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://simonsportsbetting.com/ssb-touch-v3-180.png"><link rel="manifest" href="/manifest.json?v=3"><meta name="theme-color" content="#d7dde6"><meta name="apple-mobile-web-app-title" content="Parlay Tracker"><meta property="og:url" content="https://simonsports.bet/">';
+  const silverStyle='<style id="silverRootHost">.top{border-color:rgba(255,255,255,.88)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(44,52,63,.22),0 7px 16px rgba(0,0,0,.13)!important}</style>';
+
+  function replaceHostHead(markup){
+    return markup.replace(/<head\b([^>]*)>([\s\S]*?)<\/head>/i,(full,attrs,inner)=>{
+      inner=inner
+        .replace(/<link\b(?=[^>]*\brel=["'](?:icon|shortcut icon|apple-touch-icon(?:-precomposed)?|manifest)["'])[^>]*>\s*/gi,'')
+        .replace(/<meta\b(?=[^>]*(?:name=["'](?:theme-color|apple-mobile-web-app-title)["']|property=["']og:url["']))[^>]*>\s*/gi,'')
+        .replace(/<base\b[^>]*>\s*/gi,'');
+      return '<head'+attrs+'>'+silverHead+inner+silverStyle+'</head>';
+    });
+  }
+
+  function finalizeInnerDocument(markup){
+    const assetOrigin='https://simonsportsbetting.com/';
+    const innerSilverHead='<link rel="icon" href="https://simonsportsbetting.com/favicon.ico" sizes="any"><link rel="shortcut icon" href="https://simonsportsbetting.com/favicon.ico"><link rel="icon" type="image/png" sizes="64x64" href="https://simonsportsbetting.com/ssb-favicon-v3-64.png"><link rel="icon" type="image/png" sizes="128x128" href="https://simonsportsbetting.com/ssb-favicon-v3-128.png"><link rel="apple-touch-icon" sizes="180x180" href="https://simonsportsbetting.com/ssb-touch-v3-180.png"><link rel="apple-touch-icon-precomposed" sizes="180x180" href="https://simonsportsbetting.com/ssb-touch-v3-180.png"><link rel="manifest" href="/manifest.json?v=3"><meta name="theme-color" content="#d7dde6"><meta name="apple-mobile-web-app-title" content="Parlay Tracker"><meta property="og:url" content="https://simonsports.bet/">';
+    const innerSilverStyle='<style id="silverRootHost">.top{border-color:rgba(255,255,255,.88)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(44,52,63,.22),0 7px 16px rgba(0,0,0,.13)!important}</style>';
+
+    markup=markup
+      .replace(/\b(src|poster|srcset)\s*=\s*(["'])\.\/([^"']*)/gi,(full,attr,quote,path)=>attr+'='+quote+assetOrigin+path)
+      .replace(/(<link\b[^>]*\bhref\s*=\s*)(["'])\.\/([^"']*)/gi,(full,prefix,quote,path)=>prefix+quote+assetOrigin+path)
+      .replace(/(\.src\s*=\s*)(["'])\.\/([^"']*)/g,(full,prefix,quote,path)=>prefix+quote+assetOrigin+path)
+      .replace(/((?:fetch|import)\s*\(\s*)(["'])\.\/([^"']*)/g,(full,prefix,quote,path)=>prefix+quote+assetOrigin+path)
+      .replace(/(new\s+(?:Worker|SharedWorker)\s*\(\s*)(["'])\.\/([^"']*)/g,(full,prefix,quote,path)=>prefix+quote+assetOrigin+path)
+      .replace(/(url\(\s*)(["']?)\.\/([^)'"\s]+)(["']?\s*\))/gi,(full,prefix,openQuote,path,suffix)=>prefix+openQuote+assetOrigin+path+suffix);
+
+    return markup.replace(/<head\b([^>]*)>([\s\S]*?)<\/head>/i,(full,attrs,inner)=>{
+      inner=inner
+        .replace(/<link\b(?=[^>]*\brel=["'](?:icon|shortcut icon|apple-touch-icon(?:-precomposed)?|manifest)["'])[^>]*>\s*/gi,'')
+        .replace(/<meta\b(?=[^>]*(?:name=["'](?:theme-color|apple-mobile-web-app-title)["']|property=["']og:url["']))[^>]*>\s*/gi,'')
+        .replace(/<base\b[^>]*>\s*/gi,'');
+      return '<head'+attrs+'>'+innerSilverHead+inner+innerSilverStyle+'</head>';
+    });
+  }
+
   try{
     const response=await fetch(sourcePage,{cache:'no-store'});
     if(!response.ok)throw new Error('Source app HTTP '+response.status);
-    let html=cleanOuterHead(await response.text());
+    let html=replaceHostHead(await response.text());
     const writePattern=/document\.write\s*\(\s*html\s*\)\s*;/;
     if(!writePattern.test(html))throw new Error('Mirror loader contract changed');
-    html=html.replace(writePattern,"html=html.replace(/<head\\b([^>]*)>([\\s\\S]*?)<\\/head>/i,(full,attrs,inner)=>{inner=inner.replace(/<link\\b(?=[^>]*\\brel=[\"'](?:icon|shortcut icon|apple-touch-icon(?:-precomposed)?|manifest)[\"'])[^>]*>\\s*/gi,'').replace(/<meta\\b(?=[^>]*(?:name=[\"'](?:theme-color|apple-mobile-web-app-title)[\"']|property=[\"']og:url[\"']))[^>]*>\\s*/gi,'').replace(/<base\\b[^>]*>\\s*/gi,'');return '<head'+attrs+'>'+\"<base href=\\\"https://simonsportsbetting.com/\\\"><link rel=\\\"icon\\\" href=\\\"https://simonsportsbetting.com/favicon.ico\\\" sizes=\\\"any\\\"><link rel=\\\"shortcut icon\\\" href=\\\"https://simonsportsbetting.com/favicon.ico\\\"><link rel=\\\"icon\\\" type=\\\"image/png\\\" sizes=\\\"64x64\\\" href=\\\"https://simonsportsbetting.com/ssb-favicon-v3-64.png\\\"><link rel=\\\"icon\\\" type=\\\"image/png\\\" sizes=\\\"128x128\\\" href=\\\"https://simonsportsbetting.com/ssb-favicon-v3-128.png\\\"><link rel=\\\"apple-touch-icon\\\" sizes=\\\"180x180\\\" href=\\\"https://simonsportsbetting.com/ssb-touch-v3-180.png\\\"><link rel=\\\"apple-touch-icon-precomposed\\\" sizes=\\\"180x180\\\" href=\\\"https://simonsportsbetting.com/ssb-touch-v3-180.png\\\"><link rel=\\\"manifest\\\" href=\\\"/manifest.json?v=2\\\"><meta name=\\\"theme-color\\\" content=\\\"#d7dde6\\\"><meta name=\\\"apple-mobile-web-app-title\\\" content=\\\"Parlay Tracker\\\"><meta property=\\\"og:url\\\" content=\\\"https://simonsports.bet/\\\">\"+inner+\"<style id=\\\"silverRootHost\\\">.top{border-color:rgba(255,255,255,.88)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(44,52,63,.22),0 7px 16px rgba(0,0,0,.13)!important}</style>\"+'</head>';});document.write(html);");
+    const finalizer='html=('+finalizeInnerDocument.toString()+')(html);document.write(html);';
+    html=html.replace(writePattern,finalizer);
     document.open();
     document.write(html);
     document.close();
