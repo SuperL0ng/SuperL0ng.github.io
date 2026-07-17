@@ -1,0 +1,6 @@
+{
+  "deployment": "self-contained-silver-root",
+  "sourceRepository": "SuperL0ng/parlay-tracker",
+  "sourceCommit": "c26a6eee565a2f1d3cc7152547c8c9fd6ac3bbbf",
+  "baseCommit": "bf09e74e32745b42f662d46267c977866bc39f4f"
+}
