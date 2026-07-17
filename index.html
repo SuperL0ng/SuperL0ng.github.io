@@ -35,6 +35,7 @@
     html=html.replace(/(?:src|href)=(['"])\.\//g,(match,quote)=>match.slice(0,match.indexOf(quote)+1)+assetBase);
     html=html.replace(/(['"])\.\//g,(match,quote)=>quote+assetBase);
     html=html.replace(/<meta\b(?=[^>]*property=["']og:url["'])[^>]*>\s*/gi,'');
+    html=html.replace('document.write(html);','html=html.replace(/<head([^>]*)>/i,\'<head$1><base href="'+assetBase+'">\');document.write(html);');
     html=html.replace('</head>','<meta property="og:url" content="https://simonsports.bet/">'+
       '<style id="silverRootHost">.top{border-color:rgba(255,255,255,.88)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(44,52,63,.22),0 7px 16px rgba(0,0,0,.13)!important}</style></head>');
     document.open();
